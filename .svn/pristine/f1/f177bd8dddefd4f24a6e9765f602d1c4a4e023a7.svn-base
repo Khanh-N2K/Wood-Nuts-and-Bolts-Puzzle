@@ -1,9 +1,0 @@
-using UnityEngine;
-
-public class BoltModel : MonoBehaviour
-{
-    public void ShowRedSign(bool state)
-    {
-        transform.Find("RedSign").gameObject.SetActive(state);
-    }
-}
