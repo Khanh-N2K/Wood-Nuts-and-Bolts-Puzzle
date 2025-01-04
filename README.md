@@ -1,2 +1,2 @@
-# Nuts-and-Bolts-Puzzle
- 2D mobile game
+# Wood Nuts and Bolts Puzzle
+ Unity 2D mobile game. Genre: hyper casual.
