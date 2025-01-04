@@ -1,0 +1,33 @@
+using UnityEngine;
+
+public class PlateHole : WallHole
+{
+    private Plate plate;
+
+    private void Awake()
+    {
+        this.LoadReferences();
+    }
+
+    private void LoadReferences()
+    {
+        plate = transform.parent.GetComponent<Plate>();
+        if (plate == null)
+            Debug.LogError("Can't find plate for " + name);
+    }
+
+    public override void PinBolt(Bolt bolt)
+    {
+        base.PinBolt(bolt);
+
+        if(bolt != null)
+            plate.PinNewBolt();
+        else
+            plate.UnpinBolt();
+    }
+
+    public void InitPinnedBolt(Bolt bolt)
+    {
+        base.PinBolt(bolt);
+    }
+}

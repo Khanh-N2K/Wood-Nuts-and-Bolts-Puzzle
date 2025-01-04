@@ -1,0 +1,75 @@
+using UnityEngine;
+
+public class InputManager : MonoBehaviour
+{
+    public static InputManager Instance { private set; get; }
+
+    private Bolt pickingBolt;
+    public Bolt PickingBolt { get => pickingBolt; }
+
+    private void Awake()
+    {
+        this.SetSingleton();
+    }
+
+    private void SetSingleton()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
+
+    private void OnMouseDown()
+    {
+        Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        if (this.pickingBolt != null)
+        {
+            this.PinBolt(mousePos);
+        } else
+        {
+            this.PickBolt(mousePos);
+        }
+    }
+
+    private void PinBolt(Vector2 mousePos)
+    {
+        this.pickingBolt.AnimatePinBolt();
+
+        WallHole wallHole = ColliderCatcher.Instance.CatchWallHole(mousePos);
+        if(wallHole == null)
+        {
+            this.FreePickingBolt();
+            return;
+        }
+
+        PlateHole[] plateHoles = ColliderCatcher.Instance.CatchPlateHoles(wallHole);
+        Plate[] plates = ColliderCatcher.Instance.CatchPlates(wallHole);
+
+        this.pickingBolt.TryPinBolt(wallHole, plateHoles, plates);
+    }
+
+    public void FreePickingBolt()
+    {
+        this.pickingBolt = null;
+    }
+
+    private void PickBolt(Vector2 mousePos)
+    {
+        Collider2D boltCollider = Physics2D.OverlapPoint(mousePos, Config.Instance.BoltLayerMask.value);
+        Bolt bolt = boltCollider?.transform.parent.GetComponent<Bolt>();
+
+        PickBolt(bolt);
+    }
+
+    public void PickBolt(Bolt bolt)
+    {
+        this.pickingBolt = bolt;
+        bolt?.AnimatePickBolt();
+    }
+}

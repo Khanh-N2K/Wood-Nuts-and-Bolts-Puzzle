@@ -1,0 +1,97 @@
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Plate : MonoBehaviour
+{
+    private Rigidbody2D rigidBody;
+    private List<PlateHole> plateHoles = new();
+    private Bolt hangingBolt;
+
+    private int pinnedBoltCount;
+
+    private void Awake()
+    {
+        this.LoadReferences();
+        this.Reset();
+    }
+
+    private void LoadReferences()
+    {
+        this.rigidBody = GetComponent<Rigidbody2D>();
+    }
+
+    private void Reset()
+    {
+        gameObject.layer = transform.parent.gameObject.layer;
+
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+        string layerName = LayerMask.LayerToName(gameObject.layer);
+        spriteRenderer.sortingLayerID = SortingLayer.NameToID(layerName);
+    }
+
+    public void UpdatePlateHoles()
+    {
+        this.pinnedBoltCount = transform.childCount;
+        this.UpdatePhysic(0);
+    }
+
+    public void UnpinBolt()
+    {
+        this.UpdateBoltCount(false);
+    }
+
+    public void PinNewBolt()
+    {
+        this.UpdateBoltCount(true);
+    }
+
+    private void UpdateBoltCount(bool pinBolt)
+    {
+        int oldPinnedBoltCount = this.pinnedBoltCount;
+
+        if(pinBolt)
+            this.pinnedBoltCount++;
+        else 
+            this.pinnedBoltCount--;
+
+        this.UpdatePhysic(oldPinnedBoltCount);
+    }
+
+    private void UpdatePhysic(int oldPinnedBoltCount)
+    {
+        if (this.pinnedBoltCount == 1)
+            this.SetJoint();
+        else if (oldPinnedBoltCount == 1)
+            this.RemoveJoint();
+
+        if (this.pinnedBoltCount <= 1)
+            this.rigidBody.bodyType = RigidbodyType2D.Dynamic;
+        else
+            this.rigidBody.bodyType = RigidbodyType2D.Static;
+    }
+
+    private void SetJoint() 
+    {
+        foreach(PlateHole plateHole in this.plateHoles)
+        {
+            if (plateHole.GetPinnedBolt() != null)
+            {
+                this.hangingBolt = plateHole.GetPinnedBolt();
+                break;
+            }
+        }
+
+        this.hangingBolt?.SetJoint(this.rigidBody);
+    }
+
+    private void RemoveJoint() 
+    {
+        this.hangingBolt.RemoveJoint(this.rigidBody);
+        this.hangingBolt = null;
+    }
+    
+    public void AddPlateHole(PlateHole plateHole)
+    {
+        this.plateHoles.Add(plateHole);
+    }
+}

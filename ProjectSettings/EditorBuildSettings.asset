@@ -1,0 +1,24 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/StartUI.unity
+    guid: c6fd231b6792bb6498f3292bbb3633f1
+  - enabled: 1
+    path: Assets/Scenes/MainGamePlay.unity
+    guid: 3fc8acdd13e6c734bafef6554d6fdbcd
+  - enabled: 1
+    path: Assets/Scenes/Minigame _ ImagePuzzle.unity
+    guid: 63ae129d7cc40214894d9d19f40593c6
+  - enabled: 1
+    path: Assets/Scenes/Minigame _ Capybara Runner.unity
+    guid: fe826753807be8644999c799f4726176
+  m_configObjects:
+    com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000, guid: d19a79b1ed061eb469829d7a69659d21, type: 2}
+    com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: b4853be7076390f409eb5097abd07f40, type: 2}
+    com.unity.adaptiveperformance.samsung.android.provider_settings: {fileID: 11400000, guid: 2f65556d58304814db6a7d63e2d6b367, type: 2}
+    com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: b347737b6f8d0c540ad274c8c918a916, type: 2}

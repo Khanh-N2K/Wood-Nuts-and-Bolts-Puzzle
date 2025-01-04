@@ -1,0 +1,67 @@
+using UnityEngine;
+
+public class ColliderCatcher : MonoBehaviour
+{
+    public static ColliderCatcher Instance { get; private set; }
+
+    private void Awake()
+    {
+        this.SetSingleton();
+    }
+
+    private void SetSingleton()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this);
+        }
+    }
+
+    public WallHole CatchWallHole(Vector2 mousePos)
+    {
+        Collider2D holeCollider = Physics2D.OverlapPoint(mousePos, Config.Instance.WallHoleLayerMask);
+
+        if (holeCollider == null) return null;
+        return holeCollider.transform.parent.GetComponent<WallHole>();
+    }
+
+    public PlateHole[] CatchPlateHoles(WallHole wallHole)
+    {
+        Vector2 wallHolePos = wallHole.transform.position;
+        float wallHoleRadius = wallHole.GetRadius();
+
+        Collider2D[] holeColliders = Physics2D.OverlapCircleAll(wallHolePos, wallHoleRadius, Config.Instance.PlateHoleLayerMask);
+        PlateHole[] plateHoles = new PlateHole[holeColliders.Length];
+
+        int holeIndex = 0;
+        foreach (Collider2D hole in holeColliders)
+        {
+            plateHoles[holeIndex] = hole.transform.parent.GetComponent<PlateHole>();
+            holeIndex++;
+        }
+
+        return plateHoles;
+    }
+
+    public Plate[] CatchPlates(WallHole wallHole)
+    {
+        Vector2 wallHolePos = wallHole.transform.position;
+        float wallHoleRadius = wallHole.GetRadius();
+
+        Collider2D[] plateColliders = Physics2D.OverlapCircleAll(wallHolePos, wallHoleRadius, Config.Instance.PlatesLayerMask);
+        Plate[] plates = new Plate[plateColliders.Length];
+
+        int plateIndex = 0;
+        foreach (Collider2D plateCollider in plateColliders)
+        {
+            plates[plateIndex] = plateCollider.GetComponent<Plate>();
+            plateIndex++;
+        }
+
+        return plates;
+    }
+}
